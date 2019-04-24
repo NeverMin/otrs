@@ -158,7 +158,11 @@ sub new {
 
         for ( 0 .. $#Parameters ) {
             return $Text if !defined $Parameters[$_];
+<<<<<<< HEAD
             $Text =~ s/%s/$Parameters[$_]/;
+=======
+            $Text =~ s/%(s|d)/$Parameters[$_]/;
+>>>>>>> origin/rel-6_0
         }
 
         return $Text;

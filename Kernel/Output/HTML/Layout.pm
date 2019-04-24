@@ -2503,13 +2503,22 @@ sub Attachment {
 
         # Disallow external and inline scripts, active content, frames, but keep allowing inline styles
         #   as this is a common use case in emails.
+<<<<<<< HEAD
+=======
+        # Also disallow referrer headers to prevent referrer leaks via old-style policy directive. Please note this has
+        #   been deprecated and will be removed in future OTRS versions in favor of a separate header (see below).
+>>>>>>> origin/rel-6_0
         # img-src:    allow external and inline (data:) images
         # script-src: block all scripts
         # object-src: allow 'self' so that the browser can load plugins for PDF display
         # frame-src:  block all frames
         # style-src:  allow inline styles for nice email display
         $Output
+<<<<<<< HEAD
             .= "Content-Security-Policy: default-src *; img-src * data:; script-src 'none'; object-src 'self'; frame-src 'none'; style-src 'unsafe-inline';\n";
+=======
+            .= "Content-Security-Policy: default-src *; img-src * data:; script-src 'none'; object-src 'self'; frame-src 'none'; style-src 'unsafe-inline'; referrer no-referrer;\n";
+>>>>>>> origin/rel-6_0
 
         # Use Referrer-Policy header to suppress referrer information in modern browsers
         #   (to prevent referrer-leak attacks).

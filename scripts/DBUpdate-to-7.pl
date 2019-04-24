@@ -46,25 +46,31 @@ my %Options = (
     Verbose        => 0,
 );
 Getopt::Long::GetOptions(
-    'help',            \$Options{Help},
-    'non-interactive', \$Options{NonInteractive},
-    'timing',          \$Options{Timing},
-    'verbose',         \$Options{Verbose},
+    'help',                      \$Options{Help},
+    'non-interactive',           \$Options{NonInteractive},
+    'cleanup-orphaned-articles', \$Options{CleanupOrphanedArticles},
+    'timing',                    \$Options{Timing},
+    'verbose',                   \$Options{Verbose},
 );
 
 {
     if ( $Options{Help} ) {
         print <<"EOF";
 
+<<<<<<< HEAD:scripts/DBUpdate-to-7.pl
 DBUpdate-to-7.pl - Upgrade script for OTRS 6 to 7 migration.
+=======
+DBUpdate-to-6.pl - Upgrade script for OTRS 5 to 6 migration.
+>>>>>>> origin/rel-6_0:scripts/DBUpdate-to-6.pl
 Copyright (C) 2001-2018 OTRS AG, http://otrs.com/
 
 Usage: $0
     Options are as follows:
-        --help              display this help
-        --non-interactive   skip interactive input and display steps to execute after script has been executed
-        --timing            shows how much time is consumed on each task execution in the script
-        --verbose           shows details on some migration steps, not just failing.
+        --help                          display this help
+        --non-interactive               skip interactive input and display steps to execute after script has been executed
+        --cleanup-orphaned-articles     delete orphaned article data if no corresponding ticket exists anymore (can only be used with non-interactive)
+        --timing                        shows how much time is consumed on each task execution in the script
+        --verbose                       shows details on some migration steps, not just failing.
 
 EOF
         exit 1;
@@ -79,7 +85,16 @@ Please run it as the 'otrs' user or with the help of su:
 ";
     }
 
+<<<<<<< HEAD:scripts/DBUpdate-to-7.pl
     $Kernel::OM->Create('scripts::DBUpdate')->Run(
+=======
+    # Allow cleanup-orphaned-articles only if also non-interactive is set.
+    if ( $Options{CleanupOrphanedArticles} && !$Options{NonInteractive} ) {
+        $Options{CleanupOrphanedArticles} = 0;
+    }
+
+    $Kernel::OM->Create('scripts::DBUpdateTo6')->Run(
+>>>>>>> origin/rel-6_0:scripts/DBUpdate-to-6.pl
         CommandlineOptions => \%Options,
     );
 

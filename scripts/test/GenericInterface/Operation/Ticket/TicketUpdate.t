@@ -606,7 +606,7 @@ my @Tests = (
     },
 
     {
-        Name           => 'Update Text DynamicField (with wrong value)',
+        Name           => 'Update Text and Dropdown DynamicFields (with wrong value type)',
         SuccessRequest => '1',
         RequestData    => {
             TicketID     => $TicketID1,
@@ -644,6 +644,45 @@ my @Tests = (
         },
         Operation => 'TicketUpdate',
     },
+<<<<<<< HEAD
+=======
+
+    {
+        Name           => 'Update Dropdown DynamicField (with invalid value)',
+        SuccessRequest => '1',
+        RequestData    => {
+            TicketID     => $TicketID1,
+            DynamicField => [
+                {
+                    Name  => "Unittest2$RandomID",
+                    Value => '4',                    # invalid value
+                },
+            ],
+        },
+        Auth => {
+            SessionID => $NewSessionID,
+        },
+        ExpectedReturnRemoteData => {
+            Success => 1,
+            Data    => {
+                Error => {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: DynamicField->Value parameter is invalid!',
+                },
+            },
+        },
+        ExpectedReturnLocalData => {
+            Success => 1,
+            Data    => {
+                Error => {
+                    ErrorCode    => 'TicketUpdate.InvalidParameter',
+                    ErrorMessage => 'TicketUpdate: DynamicField->Value parameter is invalid!',
+                },
+            },
+        },
+        Operation => 'TicketUpdate',
+    },
+>>>>>>> origin/rel-6_0
     {
         Name           => 'Add article (with attachment)',
         SuccessRequest => '1',

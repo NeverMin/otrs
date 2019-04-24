@@ -5,6 +5,10 @@
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
+<<<<<<< HEAD
+=======
+## nofilter(TidyAll::Plugin::OTRS::Perl::LayoutObject)
+>>>>>>> origin/rel-6_0
 
 package Kernel::System::SysConfig::ValueType::FrontendNavigation;
 

@@ -5899,6 +5899,21 @@ via the Preferences button after logging in.
     <Setting Name="Frontend::Navigation###AdminSMIME###001-Framework" Required="0" Valid="0">
         <Description Translatable="1">Main menu item registration.</Description>
         <Navigation>Frontend::Admin::ModuleRegistration::MainMenu</Navigation>
+<<<<<<< HEAD
+        <Value>
+            <Array>
+                <DefaultItem ValueType="FrontendNavigation">
+                    <Hash>
+                    </Hash>
+                </DefaultItem>
+            </Array>
+        </Value>
+    </Setting>
+    <Setting Name="Frontend::NavigationModule###AdminSMIME" Required="0" Valid="1">
+        <Description Translatable="1">Admin area navigation for the agent interface.</Description>
+        <Navigation>Frontend::Admin::ModuleRegistration::AdminOverview</Navigation>
+=======
+>>>>>>> origin/rel-6_0
         <Value>
             <Array>
                 <DefaultItem ValueType="FrontendNavigation">

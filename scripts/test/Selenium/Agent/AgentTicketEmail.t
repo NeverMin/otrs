@@ -292,6 +292,49 @@ $Selenium->RunTest(
             "Signature found on page"
         ) || die "$SignatureText not found on page";
 
+<<<<<<< HEAD
+=======
+        # Disable session management use html cookies to check signature update (see bug#12890).
+        $Helper->ConfigSettingChange(
+            Valid => 1,
+            Key   => 'SessionUseCookie',
+            Value => 0,
+        );
+
+        # Navigate to AgentTicketEmail screen and login because there is no session cookies.
+        $Selenium->VerifiedGet("${ScriptAlias}index.pl?Action=AgentTicketEmail");
+        $Selenium->find_element( "#User",        'css' )->send_keys($TestUserLogin);
+        $Selenium->find_element( "#Password",    'css' )->send_keys($TestUserLogin);
+        $Selenium->find_element( "#LoginButton", 'css' )->VerifiedClick();
+
+        $Selenium->execute_script(
+            "\$('#Dest').val(\$('#Dest option').filter(function () { return \$(this).html() == '$QueueNames[0]'; } ).val() ).trigger('redraw.InputField').trigger('change');"
+        );
+        $Selenium->WaitFor( JavaScript => 'return typeof($) === "function" && !$(".AJAXLoader:visible").length' );
+
+        # Select customer user.
+        $Selenium->find_element( "#ToCustomer", 'css' )->send_keys( $TestData[0]->{UserLogin} );
+        $Selenium->WaitFor( JavaScript => 'return typeof($) === "function" && $("li.ui-menu-item:visible").length' );
+        $Selenium->execute_script("\$('li.ui-menu-item:contains($TestData[0]->{UserLogin})').click()");
+        $Selenium->WaitFor(
+            JavaScript =>
+                'return typeof($) === "function" && $("#CustomerSelected_1").length && !$(".AJAXLoader:visible").length'
+        );
+
+        $SignatureText = "Customer First Name: $TestData[0]->{UserFirstName}";
+        $Selenium->WaitFor(
+            JavaScript =>
+                "return typeof(\$) === 'function' && \$('#Signature').val().indexOf('$SignatureText') !== -1;"
+        );
+
+        # Check if signature have correct text after set queue and customer user.
+        $Self->Is(
+            $Selenium->execute_script('return $("#Signature").val()'),
+            $SignatureText,
+            "Signature has correct text"
+        );
+
+>>>>>>> origin/rel-6_0
         # Delete created test ticket.
         my $Success = $Kernel::OM->Get('Kernel::System::Ticket')->TicketDelete(
             TicketID => $TicketID,

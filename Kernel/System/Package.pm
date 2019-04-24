@@ -37,6 +37,10 @@ our @ObjectDependencies = (
     'Kernel::System::Main',
     'Kernel::System::OTRSBusiness',
     'Kernel::System::Scheduler',
+<<<<<<< HEAD
+=======
+    'Kernel::System::SysConfig::Migration',
+>>>>>>> origin/rel-6_0
     'Kernel::System::SysConfig::XML',
     'Kernel::System::SystemData',
     'Kernel::System::XML',
@@ -4829,6 +4833,338 @@ sub _ConfigurationDeploy {
         );
         return;
     }
+
+    return 1;
+}
+
+<<<<<<< HEAD
+=head2 _PackageInstallOrderListGet()
+=======
+    # if this is a Packageupgrade and if there is a ZZZAutoOTRS5.pm file in the backup location
+    # (this file has been copied there during the migration from OTRS 5 to OTRS 6)
+    if ( ( IsHashRefWithData( $Self->{MergedPackages} ) || $Param{Action} eq 'PackageUpgrade' ) && -e $OTRS5ConfigFile )
+    {
+>>>>>>> origin/rel-6_0
+
+Helper function for PackageInstallOrderListGet() to process the packages and its dependencies recursively.
+
+    my $Success = $PackageObject->_PackageInstallOrderListGet(
+        Callers           => {      # packages in the recursive chain
+            PackageA => 1,
+            # ...
+        },
+        InstalledVersions => {      # list of installed packages and their versions
+            PackageA => '1.0.1',
+            # ...
+        },
+        TargetPackages => {
+            PackageA => '1.0.1',    # list of packages to process
+            # ...
+        }
+        InstallOrder => {           # current install order
+            PackageA => 2,
+            PacakgeB => 1,
+            # ...
+        },
+        Failed => {                 # current failed packages or dependencies
+            Cyclic => {},
+            NotFound => {},
+            WrongVersion => {},
+            DependencyFail => {},
+        },
+        OnlinePackageLookup => {
+            PackageA => {
+                Name    => 'PackageA',
+                Version => '1.0.1',
+                PackageRequired => [
+                    {
+                        Content => 'PackageB',
+                        Version => '1.0.2',
+                    },
+                    # ...
+                ],
+            },
+        },
+        IsDependency => 1,      # 1 or 0
+    );
+
+=cut
+
+sub _PackageInstallOrderListGet {
+    my ( $Self, %Param ) = @_;
+
+    my $Success = 1;
+    PACKAGENAME:
+    for my $PackageName ( sort keys %{ $Param{TargetPackages} } ) {
+
+        next PACKAGENAME if $PackageName eq 'OTRSBusiness';
+
+        # Prevent cyclic dependencies.
+        if ( $Param{Callers}->{$PackageName} ) {
+            $Param{Failed}->{Cyclic}->{$PackageName} = 1;
+            $Success = 0;
+            next PACKAGENAME;
+        }
+
+        my $OnlinePackage = $Param{OnlinePackageLookup}->{$PackageName};
+
+        # Check if the package can be obtained on-line.
+        if ( !$OnlinePackage || !IsHashRefWithData($OnlinePackage) ) {
+            $Param{Failed}->{NotFound}->{$PackageName} = 1;
+            $Success = 0;
+            next PACKAGENAME;
+        }
+
+        # Check if the version of the on-line package is grater (or equal) to the required version,
+        #   in case of equal, reference still counts, but at update or install package must be
+        #   skipped.
+        if ( $OnlinePackage->{Version} ne $Param{TargetPackages}->{$PackageName} ) {
+            my $CheckOk = $Self->_CheckVersion(
+                VersionNew       => $OnlinePackage->{Version},
+                VersionInstalled => $Param{TargetPackages}->{$PackageName},
+                Type             => 'Max',
+            );
+            if ( !$CheckOk ) {
+                $Param{Failed}->{WrongVersion}->{$PackageName} = 1;
+                $Success = 0;
+                next PACKAGENAME;
+            }
+        }
+
+        my %PackageDependencies = map { $_->{Content} => $_->{Version} } @{ $OnlinePackage->{PackageRequired} };
+
+        # Update callers list locally to start recursion
+        my %Callers = (
+            %{ $Param{Callers} },
+            $PackageName => 1,
+        );
+
+        # Start recursion with package dependencies.
+        my $DependenciesSuccess = $Self->_PackageInstallOrderListGet(
+            Callers             => \%Callers,
+            InstalledVersions   => $Param{InstalledVersions},
+            TargetPackages      => \%PackageDependencies,
+            InstallOrder        => $Param{InstallOrder},
+            OnlinePackageLookup => $Param{OnlinePackageLookup},
+            Failed              => $Param{Failed},
+            IsDependency        => 1,
+        );
+
+        if ( !$DependenciesSuccess ) {
+            $Param{Failed}->{DependencyFail}->{$PackageName} = 1;
+            $Success = 0;
+
+            # Do not process more dependencies.
+            last PACKAGENAME if $Param{IsDependency};
+
+            # Keep processing other initial packages.
+            next PACKAGENAME;
+        }
+
+        if ( $Param{InstallOrder}->{$PackageName} ) {
+
+            # Only increase the counter if is a dependency, if its a first level package then skip,
+            #   as it was already set from the dependencies of another package.
+            if ( $Param{IsDependency} ) {
+                $Param{InstallOrder}->{$PackageName}++;
+            }
+
+            next PACKAGENAME;
+        }
+
+        # If package wasn't set before it initial value must be 1, but in case the package is added
+        #   because its a dependency then it must be sum of all packages that requires it at the
+        #   moment + 1 e.g.
+        #   ITSMCore -> GeneralCatalog, Then GeneralCatalog needs to be 2
+        #   ITSMIncidenProblemManagement -> ITSMCore -> GeneralCatalog, Then GeneralCatalog needs to be 3
+        my $InitialValue = $Param{IsDependency} ? scalar keys %Callers : 1;
+        $Param{InstallOrder}->{$PackageName} = $InitialValue;
+    }
+
+    return $Success
+}
+
+=head2 _PackageOnlineListGet()
+
+Helper function that gets the full list of available on-line packages.
+
+    my %OnlinePackages = $PackageObject->_PackageOnlineListGet();
+
+Returns:
+
+    %OnlinePackages = (
+        PackageList => [
+            {
+                Name => 'Test',
+                Version => '6.0.20',
+                File => 'Test-6.0.20.opm',
+                ChangeLog => 'InitialRelease',
+                Description => 'Test package.',
+                Framework => [
+                    {
+                        Content => '6.0.x',
+                        Minimum => '6.0.2',
+                        # ... ,
+                    }
+                ],
+                License => 'GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007',
+                PackageRequired => [
+                    {
+                        Content => 'TestRequitement',
+                        Version => '6.0.20',
+                        # ... ,
+                    },
+                ],
+                URL => 'http://otrs.org/',
+                Vendor => 'OTRS AG',
+            },
+            # ...
+        ];
+        PackageLookup  => {
+            Test => {
+                   URL        => 'http://otrs.org/',
+                    FromCloud => 1,                     # 1 or 0,
+                    Version   => '6.0.20',
+                    File      => 'Test-6.0.20.opm',
+            },
+            # ...
+        },
+    );
+
+=cut
+
+sub _PackageOnlineListGet {
+
+    my ( $Self, %Param ) = @_;
+
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my %RepositoryList = $Self->_ConfiguredRepositoryDefinitionGet();
+
+    # Show cloud repositories if system is registered.
+    my $RepositoryCloudList;
+    my $RegistrationState = $Kernel::OM->Get('Kernel::System::SystemData')->SystemDataGet(
+        Key => 'Registration::State',
+    ) || '';
+
+    if ( $RegistrationState eq 'registered' && !$Self->{CloudServicesDisabled} ) {
+        $RepositoryCloudList = $Self->RepositoryCloudList( NoCache => 1 );
+    }
+
+    my %RepositoryListAll = ( %RepositoryList, %{ $RepositoryCloudList || {} } );
+
+    my @PackageOnlineList;
+    my %PackageSoruceLookup;
+
+    for my $URL ( sort keys %RepositoryListAll ) {
+
+        my $FromCloud = 0;
+        if ( $RepositoryCloudList->{$URL} ) {
+            $FromCloud = 1;
+
+        }
+
+        my @OnlineList = $Self->PackageOnlineList(
+            URL                => $URL,
+            Lang               => 'en',
+            Cache              => 1,
+            FromCloud          => $FromCloud,
+            IncludeSameVersion => 1,
+        );
+
+        @PackageOnlineList = ( @PackageOnlineList, @OnlineList );
+
+        for my $Package (@OnlineList) {
+            $PackageSoruceLookup{ $Package->{Name} } = {
+                URL       => $URL,
+                FromCloud => $FromCloud,
+                Version   => $Package->{Version},
+                File      => $Package->{File},
+            };
+        }
+    }
+
+    return (
+        PackageList   => \@PackageOnlineList,
+        PackageLookup => \%PackageSoruceLookup,
+    );
+}
+
+=head2 _ConfiguredRepositoryDefinitionGet()
+
+Helper function that gets the full list of configured package repositories updated for the current
+framework version.
+
+    my %RepositoryList = $PackageObject->_ConfiguredRepositoryDefinitionGet();
+
+Returns:
+
+    %RepositoryList = (
+        'http://ftp.otrs.org/pub/otrs/packages' => 'OTRS Free Features',
+        # ...,
+    );
+
+=cut
+
+sub _ConfiguredRepositoryDefinitionGet {
+    my ( $Self, %Param ) = @_;
+
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my %RepositoryList;
+    if ( $ConfigObject->Get('Package::RepositoryList') ) {
+        %RepositoryList = %{ $ConfigObject->Get('Package::RepositoryList') };
+    }
+    if ( $ConfigObject->Get('Package::RepositoryRoot') ) {
+        %RepositoryList = ( %RepositoryList, $Self->PackageOnlineRepositories() );
+    }
+
+    return () if !%RepositoryList;
+
+    # Make sure ITSM repository matches the current framework version.
+    my @Matches = grep { $_ =~ m{http://ftp\.otrs\.org/pub/otrs/itsm/packages\d+/}msxi } sort keys %RepositoryList;
+
+    return %RepositoryList if !@Matches;
+
+    my @FrameworkVersionParts = split /\./, $Self->{ConfigObject}->Get('Version');
+    my $FrameworkVersion = $FrameworkVersionParts[0];
+
+    my $CurrentITSMRepository = "http://ftp.otrs.org/pub/otrs/itsm/packages$FrameworkVersion/";
+
+    # Delete all old ITSM repositories, but leave the current if exists
+    for my $Repository (@Matches) {
+        if ( $Repository ne $CurrentITSMRepository ) {
+            delete $RepositoryList{$Repository};
+        }
+    }
+
+    return %RepositoryList if exists $RepositoryList{$CurrentITSMRepository};
+
+    # Make sure that current ITSM repository is in the list.
+    $RepositoryList{$CurrentITSMRepository} = "OTRS::ITSM $FrameworkVersion Master";
+
+    return %RepositoryList;
+}
+
+=head2 _RepositoryCacheClear()
+
+Remove all caches related to the package repository.
+
+    my $Success = $PackageObject->_RepositoryCacheClear();
+
+=cut
+
+sub _RepositoryCacheClear {
+    my ( $Self, %Param ) = @_;
+
+    my $CacheObject = $Kernel::OM->Get('Kernel::System::Cache');
+
+    $CacheObject->CleanUp(
+        Type => 'RepositoryList',
+    );
+    $CacheObject->CleanUp(
+        Type => 'RepositoryGet',
+    );
 
     return 1;
 }

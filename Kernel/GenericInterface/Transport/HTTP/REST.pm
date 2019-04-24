@@ -789,7 +789,12 @@ sub RequesterPerformRequest {
         };
     }
 
+<<<<<<< HEAD
     my $SizeExceeded = 0;
+=======
+    # Send processed data to debugger.
+    my $SizeExeeded = 0;
+>>>>>>> origin/rel-6_0
     {
         my $MaxSize = $Kernel::OM->Get('Kernel::Config')->Get('GenericInterface::Operation::ResponseLoggingMaxSize')
             || 200;

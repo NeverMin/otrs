@@ -93,6 +93,10 @@ $Self->IsDeeply(
 my @DirtySettings = $SysConfigDBObject->DefaultSettingList(
     IsDirty => 1,
 );
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/rel-6_0
 $Self->IsDeeply(
     \@DirtySettings,
     [

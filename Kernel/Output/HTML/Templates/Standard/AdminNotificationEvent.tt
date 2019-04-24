@@ -577,7 +577,11 @@
                             [% Translate("Text") | html %]:
                                         </label>
                                         <div class="RichTextField">
+<<<<<<< HEAD
                                             <textarea name="[% Data.LanguageID | html %]_Body" id="[% Data.LanguageID | html %]_Body" class="RichText Validate_RequiredRichText Validate_MaxLength [% Data.BodyServerError | html %]" title="[% Translate("Message body") | html %]" rows="15" cols="[% Config("Ticket::Frontend::TextAreaNote") | html %]" data-maxlength="4000">[% Data.Body | html %]</textarea>
+=======
+                                            <textarea name="[% Data.LanguageID | html %]_Body" id="[% Data.LanguageID | html %]_Body" class="RichText Validate_RequiredRichText [% Data.BodyServerError | html %]" title="[% Translate("Message body") | html %]" rows="15" cols="[% Config("Ticket::Frontend::TextAreaNote") | html %]">[% Data.Body | html %]</textarea>
+>>>>>>> origin/rel-6_0
 
                                             <div id="[% Data.LanguageID | html %]_BodyError" class="TooltipErrorMessage">
                                                 <p>[% Translate("This field is required and must have less than 4000 characters.") | html %]</p>

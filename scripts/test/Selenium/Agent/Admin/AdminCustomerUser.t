@@ -317,7 +317,11 @@ $Selenium->RunTest(
         # Wait until the frame has loaded, before continuing.
         $Selenium->WaitFor(
             JavaScript =>
+<<<<<<< HEAD
                 'return typeof(Core) == "object" && typeof(Core.App) == "object" && Core.App.PageLoadComplete',
+=======
+                'return typeof(Core) == "object" && typeof(Core.App) == "object" && Core.App.PageLoadComplete'
+>>>>>>> origin/rel-6_0
         );
 
         # Click on 'Add customer user' button.

@@ -212,6 +212,13 @@ sub _TasksGet {
         {
             Message => 'Check if database has been backed up',
             Module  => 'DatabaseBackupCheck',
+<<<<<<< HEAD:scripts/DBUpdate.pm
+=======
+        },
+        {
+            Message => 'Upgrade database structure',
+            Module  => 'UpgradeDatabaseStructure',
+>>>>>>> origin/rel-6_0:scripts/DBUpdateTo6.pm
         },
         {
             Message => 'Upgrade database structure',
@@ -221,13 +228,115 @@ sub _TasksGet {
             Message => 'Refresh configuration cache',
             Module  => 'RebuildConfig',
         },
+<<<<<<< HEAD:scripts/DBUpdate.pm
 
         # Add new tasks here...
 
+=======
+        {
+            Message => 'Migrating ticket storage configuration',
+            Module  => 'MigrateTicketStorageModule',
+        },
+        {
+            Message => 'Migrating article search index configuration',
+            Module  => 'MigrateArticleSearchIndex',
+        },
+        {
+            Message => 'Migrating ticket zoom customer information widget configuration',
+            Module  => 'MigrateTicketFrontendCustomerInfoZoom',
+        },
+        {
+            Message => 'Drop deprecated table gi_object_lock_state',
+            Module  => 'DropObjectLockState',
+        },
+        {
+            Message => 'Migrate PossibleNextActions setting',
+            Module  => 'MigratePossibleNextActions',
+        },
+        {
+            Message => 'Migrating time zone configuration',
+            Module  => 'MigrateTimeZoneConfiguration',
+        },
+        {
+            Message => 'Create appointment calendar tables',
+            Module  => 'CreateAppointmentCalendarTables',
+        },
+        {
+            Message => 'Create ticket number counter tables',
+            Module  => 'CreateTicketNumberCounterTables',
+        },
+        {
+            Message => 'Update calendar appointment future tasks',
+            Module  => 'UpdateAppointmentCalendarFutureTasks',
+        },
+        {
+            Message => 'Add basic appointment notification for reminders',
+            Module  => 'AddAppointmentCalendarNotification',
+        },
+        {
+            Message => 'Create Form Draft tables',
+            Module  => 'CreateFormDraftTables',
+        },
+        {
+            Message => 'Clean and drop group_user permission_value column',
+            Module  => 'CleanGroupUserPermissionValue',
+        },
+        {
+            Message => 'Migrate GenericAgent jobs configuration',
+            Module  => 'MigrateGenericAgentJobs',
+        },
+        {
+            Message => 'Migrate TicketAppointment rules configuration',
+            Module  => 'MigrateTicketAppointments',
+        },
+        {
+            Message => 'Migrate Merged Ticket history name values',
+            Module  => 'MigrateTicketMergedHistory',
+        },
+        {
+            Message => 'Migrate ticket statistics',
+            Module  => 'MigrateTicketStats',
+        },
+        {
+            Message => 'Migrate ticket notifications',
+            Module  => 'MigrateTicketNotifications',
+        },
+        {
+            Message => 'Create entries in new article table',
+            Module  => 'MigrateArticleData',
+        },
+        {
+            Message => 'Post changes on article related tables',
+            Module  => 'PostArticleTableStructureChanges',
+        },
+        {
+            Message => 'Migrate ArticleType in ProcessManagement Data',
+            Module  => 'MigrateProcessManagementData',
+        },
+        {
+            Message => 'Migrate ArticleType in PostMaster filters',
+            Module  => 'MigratePostMasterData',
+        },
+        {
+            Message => 'Migrate chat articles',
+            Module  => 'MigrateChatData',
+        },
+>>>>>>> origin/rel-6_0:scripts/DBUpdateTo6.pm
         {
             Message => 'Initialize default cron jobs',
             Module  => 'InitializeDefaultCronjobs',
         },
+<<<<<<< HEAD:scripts/DBUpdate.pm
+=======
+        {
+            Message => 'Migrate web service configuration',
+            Module  => 'MigrateWebServiceConfiguration',
+        },
+        {
+            Message => 'Migrate package repository configuration',
+            Module  => 'MigratePackageRepositoryConfiguration',
+        },
+>>>>>>> origin/rel-6_0:scripts/DBUpdateTo6.pm
 
         # ...
 
@@ -242,6 +351,10 @@ sub _TasksGet {
         {
             Message => 'Refresh configuration cache another time',
             Module  => 'RebuildConfig',
+        },
+        {
+            Message => 'Check SysConfig consistency',
+            Module  => 'SysConfigCheck',
         },
     );
 

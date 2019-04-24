@@ -1279,7 +1279,7 @@ sub GetConnectionsObjectsAndCommunications {
         push @List, {
             CommunicationID => $Row[0],
             ObjectLogStatus => $Row[1],
-            AccountType     => $Row[2],
+            AccountType     => $Row[2] || 'Unknown',
             AccountID       => $Row[3],
             Transport       => $Row[4],
         };

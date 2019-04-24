@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 #7.0.0.alpha1 2018-??-??
  - 2017-12-26 Fixed bug#[13402](https://bugs.otrs.org/show_bug.cgi?id=13402) - Target \_blank value is not working for generic notifications.
  - 2017-12-12 Always require cookies for OTRS login - drop support for non-cookie sessions.
 
+=======
+>>>>>>> origin/rel-6_0
 #6.0.5 2018-??-??
  - 2018-01-13 Fixed bug#[13534](https://bugs.otrs.org/show_bug.cgi?id=13534) - Comments in the Config XML files are not ignored.
  - 2018-01-13 Fixed bug#[13339](https://bugs.otrs.org/show_bug.cgi?id=13339) - If deployment fails because of wrong settings, this wrong settings wouldn't be displayed.
@@ -23,14 +26,25 @@
  - 2018-01-05 Fixed bug#[13428](https://bugs.otrs.org/show_bug.cgi?id=13428) - Timeline view dynamic field values.
  - 2018-01-05 Fixed bug#[13516](https://bugs.otrs.org/show_bug.cgi?id=13516) - In the setting window of linked widgets dynamic field labels are not displayed.
  - 2018-01-05 Fixed bug#[13503](https://bugs.otrs.org/show_bug.cgi?id=13503) - Delete button of filter is not unified.
+<<<<<<< HEAD
  - 2018-01-05 Fixed bug#[13502](https://bugs.otrs.org/show_bug.cgi?id=13502) - communication log delete is slow.
  - 2018-01-05 Fixed bug#[13353](https://bugs.otrs.org/show_bug.cgi?id=13353) - inline picture not shown in AgentTicketZoom.
+=======
+ - 2018-01-05 Fixed bug#[13338](https://bugs.otrs.org/show_bug.cgi?id=13338) - DBUpdate-script isn't checking ZZZAuto.pm for wrong Sysconfig settings.
+ - 2018-01-05 Fixed bug#[13502](https://bugs.otrs.org/show_bug.cgi?id=13502) - communication log delete is slow.
+ - 2018-01-05 Fixed bug#[13353](https://bugs.otrs.org/show_bug.cgi?id=13353) - inline picture not shown in AgentTicketZoom.
+ - 2018-01-05 Fixed bug#[13437](https://bugs.otrs.org/show_bug.cgi?id=13437) - Upgrade script repeatedly asks for time zone configuration.
+>>>>>>> origin/rel-6_0
  - 2018-01-05 Fixed bug#[13326](https://bugs.otrs.org/show_bug.cgi?id=13326) - System was unable to lock Default Settings - after DBsetup/Step 2.
  - 2018-01-04 Fixed bug#[13267](https://bugs.otrs.org/show_bug.cgi?id=13267) - User specific settings which are overwritten in user files are not shown correctly in agent preferences screen (OTRS Business Solution™).
  - 2018-01-04 Fixed bug#[13518](https://bugs.otrs.org/show_bug.cgi?id=13518) - Invisible settings still available in SysConfig autocomplete search.
  - 2018-01-04 Fixed bug#[13294](https://bugs.otrs.org/show_bug.cgi?id=13294) - Safari autofill broken when two factor authentication is enabled.
  - 2018-01-04 Fixed bug#[13260](https://bugs.otrs.org/show_bug.cgi?id=13260) - Endless loop for recurrent daemon task with the same task name.
  - 2018-01-03 Fixed bug#[13510](https://bugs.otrs.org/show_bug.cgi?id=13510) - Article fields like Signed and Crypted are missing from the article header.
+<<<<<<< HEAD
+=======
+ - 2018-01-02 Fixed bug#[13444](https://bugs.otrs.org/show_bug.cgi?id=13444) - DynamicField Dropdown values are not verified if submitted via web service.
+>>>>>>> origin/rel-6_0
  - 2018-01-02 Follow-up fix for bug#[12569](https://bugs.otrs.org/show_bug.cgi?id=12569) - Missing explanation users (with visual impairments) in the 'Preferences' page.
  - 2017-12-29 Fixed bug#[13509](https://bugs.otrs.org/show_bug.cgi?id=13509) - Ordering in ticket overview screens is not consistent with dashboard tables.
  - 2017-12-29 Fixed bug#[13511](https://bugs.otrs.org/show_bug.cgi?id=13511) - Need UserFirstname floods system log.
@@ -55,6 +69,10 @@
  - 2017-12-20 Fixed bug#[13476](https://bugs.otrs.org/show_bug.cgi?id=13476) - Email security options in AgentTicketCompose leads into an error.
  - 2017-12-20 Fixed bug#[13231](https://bugs.otrs.org/show_bug.cgi?id=13231) - AJAX Error when ACL triggers in queue move (restrict move from one queue to another based on Properties).
  - 2017-12-20 Fixed bug#[13431](https://bugs.otrs.org/show_bug.cgi?id=13431) - Notification article is visible for the customer although it shouldn't be.
+<<<<<<< HEAD
+=======
+ - 2017-12-19 Fixed bug#[13464](https://bugs.otrs.org/show_bug.cgi?id=13464) - Dropdown selection not visible in ticket search.
+>>>>>>> origin/rel-6_0
  - 2017-12-18 Fixed bug#[13450](https://bugs.otrs.org/show_bug.cgi?id=13450) - Changing TicketType doesn't change Ticket::Frontend::CustomerTicketMessage###TicketTypeDefault.
  - 2017-12-18 Fixed bug#[13371](https://bugs.otrs.org/show_bug.cgi?id=13371) - Deleting a sysconfig entry in AgentPreferencesGroups breaks the config when saving.
  - 2017-12-14 Fixed bug#[13411](https://bugs.otrs.org/show_bug.cgi?id=13411) - Names of search templates cut off.
@@ -129,10 +147,17 @@
  - 2017-11-20 Fixed bug#[13250](https://bugs.otrs.org/show_bug.cgi?id=13250) - Disabled wrong value settings does not let to specify the correct value.
  - 2017-11-20 Fixed bug#[13291](https://bugs.otrs.org/show_bug.cgi?id=13291) - Moving setting from one XML file to another doesn't update xml_filename in the sysconfig_default table.
  - 2017-11-17 Fixed bug#[13145](https://bugs.otrs.org/show_bug.cgi?id=13145) - Editing a transistion action results in error without logfile entry.
+<<<<<<< HEAD
  - 2017-11-17 Fixed bug#[13347](https://bugs.otrs.org/show_bug.cgi?id=13347) - Internal article information disclosed by the customer search.
  - 2017-11-17 Fixed bug#[13343](https://bugs.otrs.org/show_bug.cgi?id=13343) - LDAP customer user backends should be implicitly read only.
  - 2017-11-17 Fixed bug#[13348](https://bugs.otrs.org/show_bug.cgi?id=13348) - User specific settings do not reset when set to the default value.
  - 2017-11-16 Fixed bug#[13331](https://bugs.otrs.org/show_bug.cgi?id=13331) - Ticket Age is shown not updated on customer interface.
+=======
+ - 2017-11-16 Fixed bug#[13331](https://bugs.otrs.org/show_bug.cgi?id=13331) - Ticket Age is shown not updated on customer interface.
+ - 2017-11-17 Fixed bug#[13347](https://bugs.otrs.org/show_bug.cgi?id=13347) - Internal article information disclosed by the customer search.
+ - 2017-11-17 Fixed bug#[13343](https://bugs.otrs.org/show_bug.cgi?id=13343) - LDAP customer user backends should be implicitly read only.
+ - 2017-11-17 Fixed bug#[13348](https://bugs.otrs.org/show_bug.cgi?id=13348) - User specific settings do not reset when set to the default value.
+>>>>>>> origin/rel-6_0
  - 2017-11-16 Fixed bug#[13333](https://bugs.otrs.org/show_bug.cgi?id=13333) - Customer filter filter is too narrow on customer interface.
  - 2017-11-14 Fixed bug#[13310](https://bugs.otrs.org/show_bug.cgi?id=13310) - Only 15 tickets in ticket lists if overview medium/preview disabled for new agents.
  - 2017-11-14 Fixed bug#[13314](https://bugs.otrs.org/show_bug.cgi?id=13314) - Multiple submit possible for bulk action.
@@ -147,6 +172,10 @@
  - 2017-11-13 Fixed bug#[13318](https://bugs.otrs.org/show_bug.cgi?id=13318) - It is no longer possible to add a new navbar entry with the sysconfig frontend and the migration for own entries doesn't work.
  - 2017-11-10 Fixed bug#[13281](https://bugs.otrs.org/show_bug.cgi?id=13281) - Not possible to add more than 4000 character in ticket notification texts.
  - 2017-11-10 Fixed bug#[13320](https://bugs.otrs.org/show_bug.cgi?id=13320) - Internal Server Error in agent ticket move with Ticket::Frontend::MoveType type 'form' and with add article.
+<<<<<<< HEAD
+=======
+ - 2017-11-09 Fixed bug#[13315](https://bugs.otrs.org/show_bug.cgi?id=13315) - Problem with sending ticket notifications after the migration, because of existing 'NotificationArticleTypeID'.
+>>>>>>> origin/rel-6_0
  - 2017-11-08 Fixed bug#[13300](https://bugs.otrs.org/show_bug.cgi?id=13300) - Problem with the StatsCleanUp functionality during the package upgrade.
  - 2017-11-08 Fixed bug#[13292](https://bugs.otrs.org/show_bug.cgi?id=13292) - Internal Server Error in ticket screens with missing articles in the file system.
  - 2017-10-25 Fixed bug#[12392](https://bugs.otrs.org/show_bug.cgi?id=12392) - [thirdparty] gnupg 2.1 not working.
@@ -157,6 +186,10 @@
  - 2017-11-06 Fixed bug#[13239](https://bugs.otrs.org/show_bug.cgi?id=13239) - Legacy descriptions in SysConfig.
  - 2017-11-06 Fixed bug#[13290](https://bugs.otrs.org/show_bug.cgi?id=13290) - If Group and GroupRo and defined and both have any group set, system grants access for any user to this screen.
  - 2017-11-06 Fixed bug#[13206](https://bugs.otrs.org/show_bug.cgi?id=13206) - Dashboard does not detect expired sessions.
+<<<<<<< HEAD
+=======
+ - 2017-11-03 Fixed bug#[13279](https://bugs.otrs.org/show_bug.cgi?id=13279) - Problem with rebuilding config after migration.
+>>>>>>> origin/rel-6_0
  - 2017-11-03 Submit with Ctrl/CMD + Enter in textareas, thanks to Perleone.
  - 2017-11-03 Fixed bug#[13261](https://bugs.otrs.org/show_bug.cgi?id=13261) - Limit hit when installing ITSM package on MySQL.
  - 2017-11-03 Fixed bug#[13271](https://bugs.otrs.org/show_bug.cgi?id=13271) - Breadcrumb for a specific SysConfig setting name garbles its encoding.
@@ -194,8 +227,13 @@
  - 2017-10-13 Fixed bug#[13146](https://bugs.otrs.org/show_bug.cgi?id=13146) - DynamicField Database does not work in process dialogue.
  - 2017-10-13 Fixed bug#[13156](https://bugs.otrs.org/show_bug.cgi?id=13156) - TicketHistory hides mandatory column Ticket Actions.
  - 2017-10-13 Fixed bug#[13218](https://bugs.otrs.org/show_bug.cgi?id=13218) - Link binding works only for the last asychronous widget in the agent ticket zoom.
+<<<<<<< HEAD
  - 2017-10-12 Fixed bug#[13178](https://bugs.otrs.org/show_bug.cgi?id=13178) - Freely selectable feature package list does not honor user language.
  - 2017-10-12 Fixed bug#[13095](https://bugs.otrs.org/show_bug.cgi?id=13095) - Ambiguous message when uploading large files.
+=======
+ - 2017-10-12 Fixed bug#[13095](https://bugs.otrs.org/show_bug.cgi?id=13095) - Ambiguous message when uploading large files.
+ - 2017-10-12 Fixed bug#[13178](https://bugs.otrs.org/show_bug.cgi?id=13178) - Freely selectable feature package list does not honor user language.
+>>>>>>> origin/rel-6_0
  - 2017-10-12 Fixed bug#[13099](https://bugs.otrs.org/show_bug.cgi?id=13099) - AgentTicketPhone does not honor KeepChildren SysConfig setting for service list.
  - 2017-10-12 Fixed bug#[13059](https://bugs.otrs.org/show_bug.cgi?id=13059) - Translation is not applied in AgentAppointmentList.
  - 2017-10-12 Fixed bug#[13114](https://bugs.otrs.org/show_bug.cgi?id=13114) - Data key RegEx filters are removed if XSLT mapping contains an error.
@@ -366,6 +404,7 @@
  - 2017-04-11 Improved the customer id selection for the ticket frontends and added the autocomplete search for the customer fields in the ticket search and statistics.
  - 2017-04-11 Added the Customer User Information Center frontend.
  - 2017-04-11 Added support for multi-tiered customer and customer user relationships.
+ - 2017-04-04 Added new recipient notification groups 'AllRecipientsFirstArticle' and 'AllRecipientsLastArticle'.
  - 2017-04-04 Added new db function 'QueryInCondition' (bug#9723).
  - 2017-03-31 Fixed bug#[8811](https://bugs.otrs.org/show_bug.cgi?id=8811) - Link screen doesn't indicate search progress in any way.
  - 2017-03-30 Fixed bug#[12696](https://bugs.otrs.org/show_bug.cgi?id=12696) - Follow-up: radio buttons were partically overlapped in mobile mode.

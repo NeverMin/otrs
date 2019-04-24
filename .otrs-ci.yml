@@ -1,7 +1,11 @@
 Active: 1
 
 PlatformSets:
+<<<<<<< HEAD
  - ondemand-otrs7
+=======
+ - ondemand-otrs6
+>>>>>>> origin/rel-6_0
 
 DeployOTRSPackages:
  - OTRSCodePolicy@master

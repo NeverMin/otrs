@@ -4708,6 +4708,258 @@ Returns file name which overrides setting Effective value.
         SettingName    => 'Setting::Name',  # (required)
         UserID         => 1,                # (required)
         EffectiveValue => '3',              # (optional)
+<<<<<<< HEAD
+=======
+    );
+
+Returns:
+
+    $FileName = 'ZZZUpdate.pm';
+
+=cut
+
+sub OverriddenFileNameGet {
+    my ( $Self, %Param ) = @_;
+
+    # Check needed stuff.
+    for my $Needed (qw(SettingName UserID)) {
+        if ( !$Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!",
+            );
+            return;
+        }
+    }
+
+    my $ConfigObject = $Kernel::OM->Get('Kernel::Config');
+
+    my $LoadedEffectiveValue;
+
+    my @SettingStructure = split( '###', $Param{SettingName} );
+    for my $Key (@SettingStructure) {
+        if ( !defined $LoadedEffectiveValue ) {
+
+            # first iteration
+            $LoadedEffectiveValue = $ConfigObject->Get($Key);
+        }
+        elsif ( ref $LoadedEffectiveValue eq 'HASH' ) {
+            $LoadedEffectiveValue = $LoadedEffectiveValue->{$Key};
+        }
+    }
+
+    my $EffectiveValue = $Param{EffectiveValue};
+
+    # Replace config variables in effective values.
+    # NOTE: First level only, make sure to update this code once same mechanism has been improved in Defaults.pm.
+    #   Please see bug#12916 and bug#13376 for more information.
+    $EffectiveValue =~ s/\<OTRS_CONFIG_(.+?)\>/$ConfigObject->{$1}/g;
+
+    my $IsOverridden = DataIsDifferent(
+        Data1 => $EffectiveValue,
+        Data2 => $LoadedEffectiveValue,
+    );
+
+    # This setting is not Overridden in perl file, return.
+    return if !$IsOverridden;
+
+    my $Result;
+
+    my $Home      = $ConfigObject->Get('Home');
+    my $Directory = "$Home/Kernel/Config/Files";
+
+    # Get all .pm files that start with 'ZZZ'.
+    my @FilesInDirectory = $Kernel::OM->Get('Kernel::System::Main')->DirectoryRead(
+        Directory => $Directory,
+        Filter    => 'ZZZ*.pm',
+    );
+
+    FILE:
+    for my $File (@FilesInDirectory) {
+
+        # Get only file name, without full path and extension.
+        $File =~ m{^.*/(.*?)\.pm$};
+        my $FileName = $1;
+
+        # Skip the file that was regulary deployed.
+        next FILE if $FileName eq 'ZZZAAuto';
+
+        # Check if this file overrides our setting.
+        my $SettingFound = $Self->_IsOverriddenInModule(
+            Module           => "Kernel::Config::Files::$FileName",
+            SettingStructure => \@SettingStructure,
+        );
+
+        if ($SettingFound) {
+            $Result = $File;
+        }
+    }
+
+    if ($Result) {
+        $Result =~ s/^$Home\/?(.*)$/$1/;
+    }
+    else {
+
+        $Result = 'Kernel/Config.pm';
+
+        # Check if there is user specific value for this setting.
+        my $SettingFound = $Self->_IsOverriddenInModule(
+            Module           => "Kernel::Config::Files::User::$Param{UserID}",
+            SettingStructure => \@SettingStructure,
+        );
+
+        if ($SettingFound) {
+
+            # There is user specific value, allow admin modification.
+            $Result = 0;
+        }
+    }
+
+    return $Result;
+}
+
+=head2 GlobalEffectiveValueGet()
+
+Returns global effective value for provided setting name.
+
+    my $EffectiveValue = $SysConfigObject->GlobalEffectiveValueGet(
+        SettingName    => 'Setting::Name',  # (required)
+    );
+
+Returns:
+
+    $EffectiveValue = 'test';
+
+=cut
+
+sub GlobalEffectiveValueGet {
+    my ( $Self, %Param ) = @_;
+
+    # Check needed stuff.
+    if ( !$Param{SettingName} ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "Need SettingName!",
+        );
+        return;
+    }
+
+    my $GlobalConfigObject = Kernel::Config->new();
+
+    my $LoadedEffectiveValue;
+
+    my @SettingStructure = split( '###', $Param{SettingName} );
+    for my $Key (@SettingStructure) {
+        if ( !defined $LoadedEffectiveValue ) {
+
+            # first iteration
+            $LoadedEffectiveValue = $GlobalConfigObject->Get($Key);
+        }
+        elsif ( ref $LoadedEffectiveValue eq 'HASH' ) {
+            $LoadedEffectiveValue = $LoadedEffectiveValue->{$Key};
+        }
+    }
+
+    return $LoadedEffectiveValue;
+}
+
+=head1 PRIVATE INTERFACE
+
+=head2 _IsOverriddenInModule()
+
+Helper method to check if setting is overridden in specific module.
+
+    my $Overridden = $SysConfigObject->_IsOverriddenInModule(
+        Module               => "Kernel::Config::Files::ZZZAAuto",
+        SettingStructure     => [ 'DashboardBackend', '0000-ProductNotify' ],
+        LoadedEffectiveValue => 'Value',
+    );
+
+=cut
+
+sub _IsOverriddenInModule {
+    my ( $Self, %Param ) = @_;
+
+    # Check needed stuff.
+    for my $Needed (qw(Module SettingStructure)) {
+        if ( !$Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!",
+            );
+            return;
+        }
+    }
+
+    if ( !IsArrayRefWithData( $Param{SettingStructure} ) ) {
+        $Kernel::OM->Get('Kernel::System::Log')->Log(
+            Priority => 'error',
+            Message  => "SettingStructure must be an array!"
+        );
+        return;
+    }
+
+    my $MainObject = $Kernel::OM->Get('Kernel::System::Main');
+
+    my $Result;
+
+    # Check if the setting applies to the current user only.
+    my $Loaded = $MainObject->Require(
+        $Param{Module},
+        Silent => 1,
+    );
+
+    # If module couldn't be loaded, there is no user specific setting.
+    return $Result if !$Loaded;
+
+    # Try to load setting value.
+    my $OverriddenSettings = {};
+    $Param{Module}->Load($OverriddenSettings);
+
+    # Loaded hash is empty, return.
+    return $Result if !IsHashRefWithData($OverriddenSettings);
+
+    # Check if this file overrides our setting.
+    my $SettingFound = 0;
+    my $LoadedEffectiveValue;
+
+    KEY:
+    for my $Key ( @{ $Param{SettingStructure} } ) {
+        if ( !defined $LoadedEffectiveValue ) {
+
+            # First iteration.
+            $LoadedEffectiveValue = $OverriddenSettings->{$Key};
+            if ( defined $LoadedEffectiveValue ) {
+                $SettingFound = 1;
+            }
+            else {
+                last KEY;
+            }
+        }
+        elsif ( ref $LoadedEffectiveValue eq 'HASH' ) {
+            $LoadedEffectiveValue = $LoadedEffectiveValue->{$Key};
+            if ( defined $LoadedEffectiveValue ) {
+                $SettingFound = 1;
+            }
+            else {
+                $SettingFound = 0;
+            }
+        }
+    }
+
+    return $SettingFound;
+}
+
+=head2 _FileWriteAtomic()
+
+Writes a file in an atomic operation. This is achieved by creating
+a temporary file, filling and renaming it. This avoids inconsistent states
+when the file is updated.
+
+    my $Success = $SysConfigObject->_FileWriteAtomic(
+        Filename => "$Self->{Home}/Kernel/Config/Files/ZZZAAuto.pm",
+        Content  => \$NewContent,
+>>>>>>> origin/rel-6_0
     );
 
 Returns:
@@ -5237,7 +5489,46 @@ sub _NavigationTree {
             $Result{ $Param{Array}->[0] } = {
                 Subitems => \%Hash,
             };
+<<<<<<< HEAD
         }
+    }
+
+    return %Result;
+}
+
+sub _NavigationTreeNodeCount {
+    my ( $Self, %Param ) = @_;
+
+    # Check needed stuff.
+    for my $Needed (qw(Settings)) {
+        if ( !$Param{$Needed} ) {
+            $Kernel::OM->Get('Kernel::System::Log')->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!",
+            );
+            return;
+=======
+>>>>>>> origin/rel-6_0
+        }
+    }
+
+    my %Result = %{ $Param{Tree} // {} };
+
+    NODE_NAME:
+    for my $NodeName ( sort keys %Result ) {
+
+        my @Matches = grep { $_->{Navigation} eq $NodeName } @{ $Param{Settings} };
+        $Result{$NodeName}->{Count} = scalar @Matches;
+
+        my %SubResult = $Self->_NavigationTreeNodeCount(
+            Tree     => $Result{$NodeName}->{Subitems},
+            Settings => $Param{Settings},
+        );
+
+        $Result{$NodeName}->{Subitems} = {
+            %{ $Result{$NodeName}->{Subitems} },
+            %SubResult,
+        };
     }
 
     return %Result;

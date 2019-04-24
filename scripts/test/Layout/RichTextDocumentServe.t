@@ -39,7 +39,11 @@ my @Tests = (
         },
         Result => {
             ContentType => 'text/html; charset="utf-8"',
+<<<<<<< HEAD
             Content     => '<img src="index.pl?Action=SomeAction;FileID=0">',
+=======
+            Content     => '<img src="index.pl?Action=SomeAction;FileID=0;SessionID=123">',
+>>>>>>> origin/rel-6_0
         },
     },
     {
@@ -272,6 +276,7 @@ EOF
     },
     {
         Name => 'Charset - iso-8859-1',
+<<<<<<< HEAD
         Data => {
             Content     => '<meta http-equiv="Content-Type" content="text/html; charset=\'iso-8859-1\'">',
             ContentType => 'text/html; charset="iso-8859-1"',
@@ -284,6 +289,58 @@ EOF
         },
     },
     {
+        Name => 'Charset - Windows-1252',
+        Data => {
+            Content     => '<meta http-equiv="Content-Type" content="text/html;charset=Windows-1252">',
+            ContentType => 'text/html; charset=Windows-1252',
+=======
+        Data => {
+            Content     => '<meta http-equiv="Content-Type" content="text/html; charset=\'iso-8859-1\'">',
+            ContentType => 'text/html; charset="iso-8859-1"',
+>>>>>>> origin/rel-6_0
+        },
+        Attachments => {},
+        URL         => 'Action=SomeAction;FileID=',
+        Result      => {
+<<<<<<< HEAD
+            Content     => '<meta http-equiv="Content-Type" content="text/html;charset=utf-8">',
+            ContentType => 'text/html; charset=utf-8',
+        },
+    },
+    {
+        Name => 'Charset - utf-8',
+        Data => {
+            Content     => '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">',
+            ContentType => 'text/html; charset=utf-8',
+        },
+        Attachments => {},
+        URL         => 'Action=SomeAction;FileID=',
+        Result      => {
+            Content     => '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">',
+            ContentType => 'text/html; charset=utf-8',
+        },
+    },
+    {
+        Name => 'Charset - double quotes',
+        Data => {
+            Content     => '<meta http-equiv=\'Content-Type\' content=\'text/html; charset="utf-8"\'>',
+            ContentType => 'text/html; charset="utf-8"',
+        },
+        Attachments => {},
+        URL         => 'Action=SomeAction;FileID=',
+        Result      => {
+            Content     => '<meta http-equiv=\'Content-Type\' content=\'text/html; charset="utf-8"\'>',
+=======
+            Content     => '<meta http-equiv="Content-Type" content="text/html; charset=\'utf-8\'">',
+>>>>>>> origin/rel-6_0
+            ContentType => 'text/html; charset="utf-8"',
+        },
+    },
+    {
+<<<<<<< HEAD
+        Name => 'Charset - no charset defined, see bug#9610',
+        Data => {
+=======
         Name => 'Charset - Windows-1252',
         Data => {
             Content     => '<meta http-equiv="Content-Type" content="text/html;charset=Windows-1252">',
@@ -325,6 +382,7 @@ EOF
     {
         Name => 'Charset - no charset defined, see bug#9610',
         Data => {
+>>>>>>> origin/rel-6_0
             Content     => '<meta http-equiv="Content-Type" content="text/html">',
             ContentType => 'text/html',
         },
